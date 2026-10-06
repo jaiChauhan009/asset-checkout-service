@@ -1,3 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Asset, CheckOut, Employee, OverdueNotice
+
+admin.site.register([Asset, Employee, CheckOut, OverdueNotice])
