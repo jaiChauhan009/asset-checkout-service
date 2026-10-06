@@ -87,5 +87,6 @@ curl -H "$T" localhost:8000/api/v1/reports/overdue/
 
 - The screen recording link is still a TODO: _add Loom link here_.
 - Email delivery for overdue notices is not implemented. The spec only asks for the notice rows.
-- The local Windows machine used for development had no Postgres. The non-Docker test run used SQLite, where the threaded concurrency test is skipped. It runs under `docker compose exec web pytest`.
+- Verified under `docker compose`: 23/23 tests pass on Postgres 16, including the threaded concurrency test. The Celery worker and Beat start, and `flag_overdue_checkouts` run twice through the worker created 2 notices and then 0. Without Docker, SQLite skips the concurrency test.
+- No Celery result backend is configured, so `task.delay().get()` is not supported. The task's results are visible in the worker logs.
 - `web` uses `runserver` in compose for live reload during review. The Dockerfile's default command is gunicorn for production use.
