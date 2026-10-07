@@ -4,6 +4,8 @@ Django + DRF service for checking equipment out to employees and back in. It run
 
 Answers to Parts B, C and D are in [ANSWERS.md](ANSWERS.md).
 
+**Screen recording:** [Artikate-Backend-Assessment-Asset-Checkout-Demo.mp4 (Google Drive, 6:20)](https://drive.google.com/file/d/1WO2O8_SLdtV4c61Uoc9b6hRFp5M0gnrC/view?usp=sharing). It shows the stack starting on a clean database, migrate and seed, the full check-out flow with every business rule, the employee summary, the overdue report, the test suite passing on Postgres, and the Celery task running twice through the worker.
+
 ## Run with Docker (from clone to working API)
 
 ```bash
@@ -85,7 +87,7 @@ curl -H "$T" localhost:8000/api/v1/reports/overdue/
 
 ## Known gaps
 
-- The screen recording link is still a TODO: _add Loom link here_.
+- The screen recording has no voice narration, and it stops as the "decision I am least sure about" section begins. That decision is how "overdue" is defined (strictly `due_at < now`, with whole-day `days_overdue`), and the reasoning is in the Assumptions section above. I am happy to walk through it in the live round.
 - Email delivery for overdue notices is not implemented. The spec only asks for the notice rows.
 - Verified under `docker compose`: 23/23 tests pass on Postgres 16, including the threaded concurrency test. The Celery worker and Beat start, and `flag_overdue_checkouts` run twice through the worker created 2 notices and then 0. Without Docker, SQLite skips the concurrency test.
 - No Celery result backend is configured, so `task.delay().get()` is not supported. The task's results are visible in the worker logs.
